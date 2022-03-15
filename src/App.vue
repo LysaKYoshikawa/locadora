@@ -82,126 +82,133 @@
         <div class="row" v-if="mostrarFilmes">
           <h2>Carrinho</h2>
 
-        <div class="col-12">
-          <form>
-            <div class="form-group">
-              <label for="pedido.primeiroNome">Primeiro Nome</label>
-              <input
-              type="text"
-              class="form-control"
-              id="primeiroNome"
-              placeholder="Digite o primeiro nome"
-              v-model.trim.lazy="pedido.primeiroNome"
-              >
+          <div class="col-12">
+            <form>
+              <div class="form-group">
+                <label for="pedido.primeiroNome">Primeiro Nome</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="primeiroNome"
+                  placeholder="Digite o primeiro nome"
+                  v-model.trim.lazy="pedido.primeiroNome"
+                />
+              </div>
+              <div class="form-group">
+                <label for="ultimoNome">Último Nome</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ultimoNome"
+                  placeholder="Digite o ultimo nome"
+                  v-model.trim.lazy="pedido.ultimoNome"
+                />
+              </div>
+              <div class="form-group">
+                <label for="endereco">Endereço</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="endereco"
+                  placeholder="Digite o seu endereco"
+                  v-model.trim.lazy="pedido.endereco"
+                />
+              </div>
+              <div class="form-group">
+                <label for="cidade">cidade</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="cidade"
+                  placeholder="Digite a cidade"
+                  v-model.trim.lazy="pedido.cidade"
+                />
+              </div>
+              <div class="form-group">
+                <label for="estado">Estado</label>
+                <select
+                  class="form-control"
+                  id="estado"
+                  v-model="pedido.estado"
+                >
+                  <option disabled value>Escolha um estado</option>
+                  <option
+                    v-for="(estado, key) in estados"
+                    v-bind:value="estado"
+                    v-bind:key="key"
+                  >
+                    {{ key }}
+                  </option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="cep">CEP</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="cep"
+                  placeholder="Digite o seu cep"
+                  v-model.trim.lazy="pedido.cep"
+                />
+              </div>
+              <div class="form-group form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="pagoNaEntrega"
+                  v-bind:true-value="pedido.simNaEntrega"
+                  v-bind:false-value="pedido.naoNaEntrega"
+                  v-model="pedido.pagoNaEntrega"
+                />
+                <label class="form-check-label" for="pagoNaEntrega"
+                  >Pago na entrega?</label
+                >
+              </div>
 
-            </div>
-            <div class="form-group">
-              <label for="ultimoNome">Último Nome</label>
-              <input
-              type="text"
-              class="form-control"
-              id="ultimoNome"
-              placeholder="Digite o ultimo nome"
-              v-model.trim.lazy="pedido.ultimoNome"
-              >
+              <div class="form-group form-check-inline">
+                <input
+                  type="radio"
+                  class="form-check-input"
+                  id="manha"
+                  value="Manhã"
+                  v-model="pedido.entrega"
+                />
+                <label class="form-check-label" for="manha">Manhã</label>
+              </div>
+              <div class="form-group form-check-inline">
+                <input
+                  type="radio"
+                  class="form-check-input"
+                  id="tarde"
+                  value="Tarde"
+                  v-model="pedido.entrega"
+                />
+                <label class="form-check-label" for="tarde">Tarde</label>
+              </div>
+              <div class="form-group form-check-inline">
+                <input
+                  type="radio"
+                  class="form-check-input"
+                  id="noite"
+                  value="Noite"
+                  v-model="pedido.entrega"
+                />
+                <label class="form-check-label" for="noite">Noite</label>
+              </div>
 
-            </div>
-            <div class="form-group">
-              <label for="endereco">Endereço</label>
-              <input
-              type="text"
-              class="form-control"
-              id="endereco"
-              placeholder="Digite o seu endereco"
-              v-model.trim.lazy="pedido.endereco"
-              >
-
-            </div>
-            <div class="form-group">
-              <label for="cidade">cidade</label>
-              <input
-              type="text"
-              class="form-control"
-              id="cidade"
-              placeholder="Digite a cidade"
-              v-model.trim.lazy="pedido.cidade"
-              >
-
-            </div>
-            <div class="form-group">
-              <label for="estado">Estado</label>
-              <select class="form-control" id="estado" v-model="pedido.estado">
-                <option disabled value>Escolha um estado</option>
-                <option
-                v-for="(estado,key) in estados"
-                v-bind:value="estado"
-                v-bind:key="key">
-                {{ key }}
-                </option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="cep">CEP</label>
-              <input
-              type="number"
-              class="form-control"
-              id="cep"
-              placeholder="Digite o seu cep"
-              v-model.trim.lazy="pedido.cep"
-              >
-            </div>
-            <div class="form-group form-check">
-              <input
-              type="checkbox"
-              class="form-check-input"
-              id="pagoNaEntrega"
-              v-bind:true-value="pedido.simNaEntrega"
-              v-bind:false-value="pedido.naoNaEntrega"
-              v-model="pedido.pagoNaEntrega"
-              >
-              <label class="form-check-label" for="pagoNaEntrega">Pago na entrega?</label>
-            </div>
-
-            <div class="form-group form-check-inline">
-              <input
-              type="radio"
-              class="form-check-input"
-              id="manha"
-              value="Manhã"
-              v-model="pedido.entrega"
-              >
-              <label class="form-check-label" for="manha">Manhã</label>
-            </div>
-            <div class="form-group form-check-inline">
-              <input
-              type="radio"
-              class="form-check-input"
-              id="tarde"
-              value="Tarde"
-              v-model="pedido.entrega"
-              >
-              <label class="form-check-label" for="tarde">Tarde</label>
-            </div>
-            <div class="form-group form-check-inline">
-              <input
-              type="radio"
-              class="form-check-input"
-              id="noite"
-              value="Noite"
-              v-model="pedido.entrega"
-              >
-              <label class="form-check-label" for="noite">Noite</label>
-            </div>
-
-            <div class="form-group">
-              <button type="sumit" class="btn btn-primary" v-on:click="submitFormulario">
-                Finalizar Pedido
-              </button>
-            </div>
-          </form>
-        </div>
-        <div class="col-12">
-          <pre>
+              <div class="form-group">
+                <button
+                  type="sumit"
+                  class="btn btn-primary"
+                  v-on:click="submitFormulario"
+                >
+                  Finalizar Pedido
+                </button>
+              </div>
+            </form>
+          </div>
+          <div class="col-12">
+            <pre>
             Primeiro nome: {{ pedido.primeiroNome }}
             Ultimo nome: {{ pedido.ultimoNome }}
             Endereço: {{ pedido.endereco }}
@@ -210,8 +217,9 @@
             CEP: {{ pedido.cep }}
             Pago na Entrega?: {{ pedido.pagoNaEntrega }}
             Entrega: {{ pedido.entrega }}
-          </pre>
-
+          </pre
+            >
+          </div>
         </div>
       </div>
     </div>
@@ -226,7 +234,7 @@ export default {
       mostrarFilmes: true,
       title: "Locadora de filmes",
       horas: new Date().getHours(),
-      pedido:{
+      pedido: {
         primeiroNome: "",
         ultimoNom: "",
         endereco: "",
@@ -236,10 +244,9 @@ export default {
         pagoNaEntrega: "Não",
         simNaEntrega: "Sim",
         naoNaEntrega: "Não",
-        entrega: "Manhã"
-
+        entrega: "Manhã",
       },
-      estados:{
+      estados: {
         AC: "Acre",
         AL: "Alagoas",
         AP: "Amapá",
@@ -266,7 +273,7 @@ export default {
         SC: "Santa Catarina ",
         SP: "São Paulo ",
         SE: "Sergipe",
-        TO: "Tocantins"
+        TO: "Tocantins",
       },
       filmes: [
         {
@@ -277,7 +284,7 @@ export default {
           imagem:
             "https://ondebaixa.com/imagens/the-avengers-os-vingadores-4k-download-torrent-dublado-dual-audio-bluray-1080p-720p-4k-hd.jpg",
           estoqueDisponivel: 3,
-          avaliacao: 1
+          avaliacao: 1,
         },
         {
           id: 2,
@@ -287,7 +294,7 @@ export default {
           imagem:
             "https://ondebaixa.com/imagens/pantera-negra-black-panther-bluray-download-torrent-2018-dublado-dual-audio-bluray-1080p-720p-4k-hd.jpg",
           estoqueDisponivel: 4,
-          avaliacao: 1
+          avaliacao: 1,
         },
         {
           id: 3,
@@ -297,7 +304,7 @@ export default {
           imagem:
             "https://ondebaixa.com/imagens/homem-aranha-trilogia-spider-man-trilogy-download-torrent-2002-dublado-dual-audio-bluray-1080p-720p-4k-hd.jpg",
           estoqueDisponivel: 5,
-          avaliacao: 1
+          avaliacao: 1,
         },
         {
           id: 4,
@@ -307,7 +314,7 @@ export default {
           imagem:
             "https://ondebaixa.com/imagens/cinderela-e-o-pri%cc%81ncipe-secreto-download-torrent-2020-dublado-dual-audio-bluray-1080p-720p-4k-hd.jpg",
           estoqueDisponivel: 1,
-          avaliacao: 1
+          avaliacao: 1,
         },
         {
           id: 5,
@@ -317,7 +324,7 @@ export default {
           imagem:
             "https://ondebaixa.com/imagens/007-sem-tempo-para-morrer-cam-download-torrent-2021-dublado-dual-audio-bluray-1080p-720p-4k-hd.jpg",
           estoqueDisponivel: 2,
-          avaliacao: 1
+          avaliacao: 1,
         },
       ],
       carrinho: [],
