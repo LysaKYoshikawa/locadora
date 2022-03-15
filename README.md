@@ -42,7 +42,7 @@ $ npm run server
 
 As seguintes ferramentas foram usadas na construção do projeto:
 
-- [Expo](https://expo.io/)
+- [HTML](https://developer.mozilla.org/pt-BR/docs/Web/HTML)
 - [Node.js](https://nodejs.org/en/)
 - [Vue.js](https://br.vuejs.org/)
 - [JavaScript](https://developer.mozilla.org/)
