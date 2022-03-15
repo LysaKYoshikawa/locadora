@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="container">
     <h1>Bem vindo(a) a {{ title }}</h1>
 
     <h3 v-if="horas >= 9 && horas < 17" id="aberta">ABERTA</h3>
@@ -8,34 +8,211 @@
     </h3>
     <h3 v-else ID="fechada">FECHADA</h3>
 
-    <div>
-      <div>
+    <div class="row">
+      <div class="col">
         <h2>Filmes encontrado</h2>
-        <button type="button" @click="mostrarCarrinho">
+        <button
+          type="button"
+          class="btn btn-primary btn-lg"
+          @click="mostrarCarrinho"
+        >
           Carrinho: {{ quantidadeNoCarrinho }} filmes
         </button>
       </div>
     </div>
 
-    <div v-if="mostrarFilmes">
-      <div v-bind:key="filme.id" v-for="filme in filmes">
-        <img v-bind:src="filme.imagem" alt="imagem do filme" />
-        <div>
-          <h5>{{ filme.titulo }}</h5>
-          <p v-html="filme.descricao"></p>
-          <p>R$ {{ filme.valor }}</p>
+    <div class="row" v-if="mostrarFilmes">
+      <div class="col-3" v-bind:key="filme.id" v-for="filme in filmesOrdenados">
+        <div class="card">
+          <img
+            v-bind:src="filme.imagem"
+            alt="imagem do filme"
+            class="card-img-top"
+          />
+          <div class="card-body">
+            <h5 class="card-title">{{ filme.titulo }}</h5>
+            <p class="card-text" v-html="filme.descricao"></p>
+            <span
+              class="mensagem-estoque"
+              v-if="
+                filme.estoqueDisponivel -
+                  quantidadeNoCarrinhoPorFilme(filme) ===
+                0
+              "
+            >
+              indisponivel
+            </span>
+            <span
+              class="mensagem-estoque"
+              v-else-if="
+                filme.estoqueDisponivel - quantidadeNoCarrinhoPorfilme(filme) <
+                5
+              "
+            >
+              apenas
+              {{
+                filme.estoqueDisponivel - quantidadeNoCarrinhoPorFilme(filme)
+              }}
+              itens no estoque.
+            </span>
+            <span class="mensagem-estoque" v-else> Alugue agora! </span>
 
-          <a
-            href="#"
-            @click="adicionarAoCarrinho(filme)"
-            v-if="validarPermissaoParaAdicionarNoCarrinho(filme)"
-          >
-            ALUGAR</a
-          >
+            <p class="card-text">R$ {{ filme.valor }}</p>
+            <div class="avaliacao">
+              <span
+                v-for="n in 5"
+                :key="n"
+                v-bind:class="{ 'avaliacao-active': checarAvaliacao(n, filme) }"
+              >
+                <img src="./assets/star.jpg" height="20" />
+              </span>
+            </div>
+
+            <a
+              href="#"
+              @click="adicionarAoCarrinho(filme)"
+              v-if="validarPermissaoParaAdicionarNoCarrinho(filme)"
+              class="btn btn-primary"
+            >
+              ALUGAR</a
+            >
+            <a href="" v-else class="btn btn-primary disabled">Alugar</a>
+          </div>
         </div>
-      </div>
-      <div v-if="mostrarFilmes">
-        <h2>Carrinho</h2>
+        <div class="row" v-if="mostrarFilmes">
+          <h2>Carrinho</h2>
+
+        <div class="col-12">
+          <form>
+            <div class="form-group">
+              <label for="pedido.primeiroNome">Primeiro Nome</label>
+              <input
+              type="text"
+              class="form-control"
+              id="primeiroNome"
+              placeholder="Digite o primeiro nome"
+              v-model.trim.lazy="pedido.primeiroNome"
+              >
+
+            </div>
+            <div class="form-group">
+              <label for="ultimoNome">Último Nome</label>
+              <input
+              type="text"
+              class="form-control"
+              id="ultimoNome"
+              placeholder="Digite o ultimo nome"
+              v-model.trim.lazy="pedido.ultimoNome"
+              >
+
+            </div>
+            <div class="form-group">
+              <label for="endereco">Endereço</label>
+              <input
+              type="text"
+              class="form-control"
+              id="endereco"
+              placeholder="Digite o seu endereco"
+              v-model.trim.lazy="pedido.endereco"
+              >
+
+            </div>
+            <div class="form-group">
+              <label for="cidade">cidade</label>
+              <input
+              type="text"
+              class="form-control"
+              id="cidade"
+              placeholder="Digite a cidade"
+              v-model.trim.lazy="pedido.cidade"
+              >
+
+            </div>
+            <div class="form-group">
+              <label for="estado">Estado</label>
+              <select class="form-control" id="estado" v-model="pedido.estado">
+                <option disabled value>Escolha um estado</option>
+                <option
+                v-for="(estado,key) in estados"
+                v-bind:value="estado"
+                v-bind:key="key">
+                {{ key }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="cep">CEP</label>
+              <input
+              type="number"
+              class="form-control"
+              id="cep"
+              placeholder="Digite o seu cep"
+              v-model.trim.lazy="pedido.cep"
+              >
+            </div>
+            <div class="form-group form-check">
+              <input
+              type="checkbox"
+              class="form-check-input"
+              id="pagoNaEntrega"
+              v-bind:true-value="pedido.simNaEntrega"
+              v-bind:false-value="pedido.naoNaEntrega"
+              v-model="pedido.pagoNaEntrega"
+              >
+              <label class="form-check-label" for="pagoNaEntrega">Pago na entrega?</label>
+            </div>
+
+            <div class="form-group form-check-inline">
+              <input
+              type="radio"
+              class="form-check-input"
+              id="manha"
+              value="Manhã"
+              v-model="pedido.entrega"
+              >
+              <label class="form-check-label" for="manha">Manhã</label>
+            </div>
+            <div class="form-group form-check-inline">
+              <input
+              type="radio"
+              class="form-check-input"
+              id="tarde"
+              value="Tarde"
+              v-model="pedido.entrega"
+              >
+              <label class="form-check-label" for="tarde">Tarde</label>
+            </div>
+            <div class="form-group form-check-inline">
+              <input
+              type="radio"
+              class="form-check-input"
+              id="noite"
+              value="Noite"
+              v-model="pedido.entrega"
+              >
+              <label class="form-check-label" for="noite">Noite</label>
+            </div>
+
+            <div class="form-group">
+              <button type="sumit" class="btn btn-primary" v-on:click="submitFormulario">
+                Finalizar Pedido
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="col-12">
+          <pre>
+            Primeiro nome: {{ pedido.primeiroNome }}
+            Ultimo nome: {{ pedido.ultimoNome }}
+            Endereço: {{ pedido.endereco }}
+            Cidade: {{ pedido.cidade }}
+            Estado: {{ pedido.estado }}
+            CEP: {{ pedido.cep }}
+            Pago na Entrega?: {{ pedido.pagoNaEntrega }}
+            Entrega: {{ pedido.entrega }}
+          </pre>
+
+        </div>
       </div>
     </div>
   </div>
@@ -44,83 +221,133 @@
 <script>
 export default {
   name: "app",
-  data: function(){
-    return{
+  data: function () {
+    return {
       mostrarFilmes: true,
       title: "Locadora de filmes",
       horas: new Date().getHours(),
+      pedido:{
+        primeiroNome: "",
+        ultimoNom: "",
+        endereco: "",
+        cidade: "",
+        estado: "",
+        cep: "",
+        pagoNaEntrega: "Não",
+        simNaEntrega: "Sim",
+        naoNaEntrega: "Não",
+        entrega: "Manhã"
+
+      },
+      estados:{
+        AC: "Acre",
+        AL: "Alagoas",
+        AP: "Amapá",
+        AM: "Amazonas",
+        BA: "Bahia",
+        CE: "Ceará",
+        DF: "Distrito Federal",
+        ES: "Espírito Santo",
+        GO: "Goiás",
+        MA: "Maranhão",
+        MT: "Mato Grosso",
+        MS: "Mato Grosso do Sul",
+        MG: "Minas Gerais",
+        PA: "Pará",
+        PB: "Paraíba ",
+        PR: "Paraná",
+        PE: "Pernambuco",
+        PI: "Piauí",
+        RJ: "Rio de Janeiro",
+        RN: "Rio Grande do Norte",
+        RS: "Rio Grande do Sul ",
+        RO: "Rondônia",
+        RR: "Roraima",
+        SC: "Santa Catarina ",
+        SP: "São Paulo ",
+        SE: "Sergipe",
+        TO: "Tocantins"
+      },
       filmes: [
         {
-           id: 1, 
-           titulo: "Vingadores", 
-           descricao: "Um <b>filme</b> de heróis", 
-           valor: 25, 
-           imagem: "https://ondebaixa.com/imagens/the-avengers-os-vingadores-4k-download-torrent-dublado-dual-audio-bluray-1080p-720p-4k-hd.jpg",
-           estoqueDisponivel: 3
-           },
-          { 
-            id: 2,
-            titulo: "Pantera Negra",
-            descricao: "Um filme de panteras",
-            valor: 35,
-            imagem: "https://ondebaixa.com/imagens/pantera-negra-black-panther-bluray-download-torrent-2018-dublado-dual-audio-bluray-1080p-720p-4k-hd.jpg",
-            estoqueDisponivel: 4
-          },
-          { 
-            id: 3,
-            titulo: "Homem Aranha",
-            descricao: "Um filme de aranha",
-            valor: 20,
-            imagem: "https://ondebaixa.com/imagens/homem-aranha-trilogia-spider-man-trilogy-download-torrent-2002-dublado-dual-audio-bluray-1080p-720p-4k-hd.jpg",
-            estoqueDisponivel: 5
-          },
-          { 
-            id: 4,
-            titulo: "Cinderela",
-            descricao: "Um filme de princesa",
-            valor: 40,
-            imagem: "https://ondebaixa.com/imagens/cinderela-e-o-pri%cc%81ncipe-secreto-download-torrent-2020-dublado-dual-audio-bluray-1080p-720p-4k-hd.jpg",
-            estoqueDisponivel: 1
-          },
-          { 
-            id: 5,
-            titulo: "Titanic",
-            descricao: "Um filme romântico",
-            valor: 10,
-            imagem: "https://ondebaixa.com/imagens/007-sem-tempo-para-morrer-cam-download-torrent-2021-dublado-dual-audio-bluray-1080p-720p-4k-hd.jpg",
-            estoqueDisponivel: 2
-          }
-        
+          id: 1,
+          titulo: "Vingadores",
+          descricao: "Um <b>filme</b> de heróis",
+          valor: 25,
+          imagem:
+            "https://ondebaixa.com/imagens/the-avengers-os-vingadores-4k-download-torrent-dublado-dual-audio-bluray-1080p-720p-4k-hd.jpg",
+          estoqueDisponivel: 3,
+          avaliacao: 1
+        },
+        {
+          id: 2,
+          titulo: "Pantera Negra",
+          descricao: "Um filme de panteras",
+          valor: 35,
+          imagem:
+            "https://ondebaixa.com/imagens/pantera-negra-black-panther-bluray-download-torrent-2018-dublado-dual-audio-bluray-1080p-720p-4k-hd.jpg",
+          estoqueDisponivel: 4,
+          avaliacao: 1
+        },
+        {
+          id: 3,
+          titulo: "Homem Aranha",
+          descricao: "Um filme de aranha",
+          valor: 20,
+          imagem:
+            "https://ondebaixa.com/imagens/homem-aranha-trilogia-spider-man-trilogy-download-torrent-2002-dublado-dual-audio-bluray-1080p-720p-4k-hd.jpg",
+          estoqueDisponivel: 5,
+          avaliacao: 1
+        },
+        {
+          id: 4,
+          titulo: "Cinderela",
+          descricao: "Um filme de princesa",
+          valor: 40,
+          imagem:
+            "https://ondebaixa.com/imagens/cinderela-e-o-pri%cc%81ncipe-secreto-download-torrent-2020-dublado-dual-audio-bluray-1080p-720p-4k-hd.jpg",
+          estoqueDisponivel: 1,
+          avaliacao: 1
+        },
+        {
+          id: 5,
+          titulo: "Titanic",
+          descricao: "Um filme romântico",
+          valor: 10,
+          imagem:
+            "https://ondebaixa.com/imagens/007-sem-tempo-para-morrer-cam-download-torrent-2021-dublado-dual-audio-bluray-1080p-720p-4k-hd.jpg",
+          estoqueDisponivel: 2,
+          avaliacao: 1
+        },
       ],
-      carrinho: []
+      carrinho: [],
     };
   },
-  methods:{
-    mostrarCarrinho(){
-      this.mostrarFilmes= this.mostrarFilmes ? false : true;
+  methods: {
+    mostrarCarrinho() {
+      this.mostrarFilmes = this.mostrarFilmes ? false : true;
     },
-    adicionarAoCarrinho: function(filme){
+    adicionarAoCarrinho: function (filme) {
       this.carrinho.push(filme.id);
     },
-    quantidadeNoCarrinhoPorFilme: function(filme){
-      var quantidade = 0
-      for(var i=0; i < this.carrinho.length; i++){
-          if(filme.id == this.carrinho[i]){
-            quantidade++;
-          }
-          
+    quantidadeNoCarrinhoPorFilme: function (filme) {
+      var quantidade = 0;
+      for (var i = 0; i < this.carrinho.length; i++) {
+        if (filme.id == this.carrinho[i]) {
+          quantidade++;
+        }
       }
       return quantidade;
     },
-    validarPermissaoParaAdicionarNoCarrinho: function(filme) {
+    validarPermissaoParaAdicionarNoCarrinho: function (filme) {
       return filme.estoqueDisponivel > this.quantidadeNoCarrinhoPorFilme(filme);
-    }
+    },
   },
   computed: {
-    quantidadeNoCarrinho: function() {
+    quantidadeNoCarrinho: function () {
       return this.carrinho.length;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -134,15 +361,13 @@ export default {
   margin-top: 60px;
 }
 
-#aberta{
+#aberta {
   color: blue;
 }
-#proxima-fechar{
+#proxima-fechar {
   color: orange;
 }
-#fechada{
+#fechada {
   color: red;
 }
-
-
 </style>
