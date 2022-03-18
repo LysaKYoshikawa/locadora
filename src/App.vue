@@ -331,6 +331,12 @@ export default {
     };
   },
   methods: {
+    checarAvaliacao(n,filme) {
+      return filme.avaliacao - n >=0;
+    },
+    submitFormulario(){
+      alert('pedido finalizado')
+    },
     mostrarCarrinho() {
       this.mostrarFilmes = this.mostrarFilmes ? false : true;
     },
@@ -351,6 +357,16 @@ export default {
     },
   },
   computed: {
+    filmesOrdenados(){
+      const filmes = [...this.filmes];
+      if(filmes.length > 0) {
+      return filmes.sort((a,b) => {
+        if (a.titulo.toLowerCase() < b.titulo.toLowerCase())return -1;
+        if (a.titulo.toLowerCase() > b.titulo.toLowerCase())return -1;
+        return 0;
+      });
+      }else return []
+    },
     quantidadeNoCarrinho: function () {
       return this.carrinho.length;
     },
